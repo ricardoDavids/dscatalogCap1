@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.devricardo.dscatalog.entities.Client;
 import com.devricardo.dscatalog.repositories.ClientRepository;
@@ -19,6 +20,7 @@ public class ClientService {
 	@Autowired
 	private ClientRepository repository; //Agora aqui já tenho o meu objecto injectado
 	
+	@Transactional(readOnly = true) //aqui sera só para ler alguns dados
 	public List<Client> findAll(){
 		return repository.findAll();
 	}
