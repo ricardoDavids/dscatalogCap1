@@ -2,6 +2,7 @@ package com.devricardo.dscatalog.services;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devricardo.dscatalog.dto.ClientDTO;
 import com.devricardo.dscatalog.entities.Client;
 import com.devricardo.dscatalog.repositories.ClientRepository;
+import com.devricardo.dscatalog.services.exceptions.EntityNotFoundException;
 
 
 /*Esta annotation vai registrar esta minha classe como um componente que vai participar do sistema de injecção de dependencias automatizada aqui do Spring.
@@ -51,6 +53,16 @@ public class ClientService {
 		//2ªhipotese
 		//função lambda 
 		return list.stream().map(x-> new ClientDTO(x)).collect(Collectors.toList());
+		
+		
+		
+		
+	}
+	@Transactional(readOnly = true) 
+	public ClientDTO findById(Long id) {
+		Optional<Client> obj= repository.findById(id);
+		Client entity= obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+		return new ClientDTO(entity);
 		
 	}
 }
