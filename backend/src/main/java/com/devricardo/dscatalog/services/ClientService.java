@@ -1,14 +1,15 @@
 package com.devricardo.dscatalog.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,8 @@ public class ClientService {
 	private ClientRepository repository; // Agora aqui já tenho o meu objecto injectado
 
 	@Transactional(readOnly = true) // aqui sera só para ler alguns dados
-	public List<ClientDTO> findAll() {
-		List<Client> list = repository.findAll();
+	public Page<ClientDTO> findAllPaged(PageRequest pageRequest) {
+		Page<Client> list = repository.findAll(pageRequest);
 
 		/*
 		 * 1ª Hipotese: Agora vamos ter que converter uma lista de client para uma lista
@@ -60,7 +61,7 @@ public class ClientService {
 
 		// 2ªhipotese
 		// função lambda
-		return list.stream().map(x -> new ClientDTO(x)).collect(Collectors.toList());
+		return list.map(x -> new ClientDTO(x));
 
 	}
 
@@ -115,4 +116,6 @@ public class ClientService {
 			throw new DatabaseException("Integrity violation");
 		}
 	}
+
+	
 }
